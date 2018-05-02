@@ -72,7 +72,8 @@ fun main(args: Array<String>) {
             BanListener(config),
             TooManyMentionsListener(logger, mutedRole),
             MessageDeleteListener(logger, manager, config),
-            NewJoinListener())
+            NewJoinListener(),
+            ReportDMListener(config))
 
     CommandRecommender.addAll(container.commands.keys.toList() + macroMap.keys.toList())
 
