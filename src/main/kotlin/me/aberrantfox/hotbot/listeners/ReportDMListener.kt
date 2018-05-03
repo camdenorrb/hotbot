@@ -27,7 +27,8 @@ class ReportDMListener(val config: Configuration) : ListenerAdapter() {
                 channel.sendMessage(buildReportEmbed(event.message.contentRaw, event.author)).queue()
             } else {
                 val embed = targetMessage.embeds.first()
-                targetMessage.editMessage(buildReportEmbed(embed.description + "\n" + message.contentRaw, event.author)).queue()
+                val response = (embed.description + "\n" + message.contentRaw).reversed().chunked(1000).first().reversed()
+                targetMessage.editMessage(buildReportEmbed(response, event.author)).queue()
             }
         }
     }
