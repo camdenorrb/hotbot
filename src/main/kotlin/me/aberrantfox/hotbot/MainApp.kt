@@ -22,6 +22,7 @@ import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.Guild
 import org.apache.log4j.*
 
@@ -84,6 +85,8 @@ fun main(args: Array<String>) {
 
     handleLTSMutes(config, jda)
     EngineContainer.engine = setupScriptEngine(jda, container, config)
+
+    jda.presence.game = Game.playing("DM to contact Mods")
     logger.info("Fully setup, now ready for use.")
 }
 
