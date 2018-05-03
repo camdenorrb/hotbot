@@ -20,7 +20,7 @@ class ReportDMListener(val config: Configuration) : ListenerAdapter() {
         }
 
         val channel = event.jda.getGuildById(config.serverInformation.guildid).getTextChannelById(config.messageChannels.reportChannel)
-        channel.history.retrievePast(99).queue { messages ->
+        channel.iterableHistory.queue { messages ->
             val targetMessage = messages.firstOrNull { it.embeds.first().title.contains(event.author.id) }
 
             if(targetMessage == null) {
