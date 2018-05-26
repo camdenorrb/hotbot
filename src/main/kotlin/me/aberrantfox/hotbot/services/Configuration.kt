@@ -1,7 +1,6 @@
 package me.aberrantfox.hotbot.services
 
 import com.github.salomonbrys.kotson.fromJson
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import me.aberrantfox.hotbot.logging.ChannelIdHolder
 import me.aberrantfox.hotbot.permissions.PermissionLevel
@@ -31,7 +30,8 @@ data class Security(val ignoredIDs: MutableSet<String> = mutableSetOf(),
 
 data class MessageChannels(val welcomeChannel: String = "insert-id",
                            val suggestionChannel: String = "insert-id",
-                           val profileChannel: String = "insert-channel-id")
+                           val profileChannel: String = "insert-channel-id",
+                           val remWelcomeOnLeave: Boolean = false)
 
 data class ApiConfiguration(val cleverbotAPIKey: String = "insert-api-key",
                             val cleverBotApiCallLimit: Int = 10000,

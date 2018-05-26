@@ -61,7 +61,7 @@ fun main(args: Array<String>) {
 
     jda.addEventListener(
             CommandExecutor(config, container, jda, logger, manager, messageService),
-            MemberListener(config, logger, messageService),
+            MemberListener(jda, config, logger, messageService),
             InviteListener(config, logger, manager),
             VoiceChannelListener(logger),
             NewChannelListener(mutedRole),

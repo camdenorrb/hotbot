@@ -19,13 +19,15 @@ data class CommandEvent(val config: Configuration, val jda: JDA, val channel: Me
                         val container: CommandsContainer, val mService: MService,
                         var args: List<Any> = listOf()) {
 
-    fun respond(msg: String) =
-        if(msg.length > 2000) {
+
+    fun respond(msg: String) {
+        if (msg.length > 2000) {
             val toSend = msg.chunked(2000)
             toSend.forEach { channel.sendMessage(it).queue() }
         } else {
             this.channel.sendMessage(msg).queue()
         }
+    }
 
     fun respond(embed: MessageEmbed) = this.channel.sendMessage(embed).queue()
 
@@ -105,27 +107,27 @@ open class CommandsContainer(var log: BotLogger, open var commands: HashMap<Stri
     fun listCommands() = this.commands.keys.toList()
 
     fun command(name: String, construct: Command.() -> Unit = {}): Command? {
-        val command = Command(log, name)
-        command.construct()
-        this.commands.put(name, command)
+        val command = Command(log, name).apply(construct)
+        commands[name] = command
         return command
     }
 
     fun join(vararg cmds: CommandsContainer): CommandsContainer {
         cmds.forEach {
-            this.commands.putAll(it.commands)
+            commands.putAll(it.commands)
         }
 
         return this
     }
 
-    fun has(name: String) = this.commands.containsKey(name)
+    fun has(name: String) = commands.containsKey(name)
 
-    operator fun get(name: String) = this.commands.get(name)
+    operator fun get(name: String) = commands[name]
 
     fun newLogger(log: BotLogger) {
         this.log = log
-        this.commands.values.forEach {
+
+        commands.values.forEach {
             it.log = log
         }
     }
@@ -142,7 +144,7 @@ fun produceContainer(): CommandsContainer {
     val lowMap = HashMap<String, Command>()
 
     container.commands.keys.forEach {
-        lowMap.put(it.toLowerCase(), container.commands[it]!!)
+        lowMap[it.toLowerCase()] = container.commands[it]!!
     }
 
     container.commands = lowMap
@@ -153,9 +155,7 @@ fun produceContainer(): CommandsContainer {
 annotation class CommandTagMarker
 
 fun commands(construct: CommandsContainer.() -> Unit): CommandsContainer {
-    val commands = CommandsContainer(DefaultLogger())
-    commands.construct()
-    return commands
+    return CommandsContainer(DefaultLogger()).apply(construct)
 }
 
 fun arg(type: ArgumentType, optional: Boolean = false, default: Any = "") = CommandArgument(type, optional, default)
