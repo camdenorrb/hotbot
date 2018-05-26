@@ -36,8 +36,10 @@ class MemberListener(val jda: JDA, val configuration: Configuration, val logger:
 
     override fun onGuildMemberLeave(event: GuildMemberLeaveEvent) {
 
-        val messageID = WelcomeMessages.map.remove(event.user.id)
-        welcomeChannel.deleteMessageById(messageID)
+        if (configuration.messageChannels.remWelcomeOnLeave) {
+            val messageID = WelcomeMessages.map.remove(event.user.id)
+            welcomeChannel.deleteMessageById(messageID)
+        }
 
         logger.info("${event.user.asMention} left the server")
     }
